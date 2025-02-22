@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: network-topology-metrics
+  namespace: d8-monitoring
+  labels:
+    app: network-topology
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "8000"
+    prometheus.io/path: "/metrics"
+spec:
+  selector:
+    app: network-topology
+  ports:
+  - name: metrics
+    port: 8000
+    targetPort: 8000
+  - name: nodegraph
+    port: 8001
+    targetPort: 8001

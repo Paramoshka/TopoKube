@@ -1,0 +1,23 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    heritage: deckhouse
+    prometheus: main
+  name: kubetop-network-monitor
+  namespace: d8-monitoring
+spec:
+  endpoints:
+  - path: /metrics
+    port: metrics
+    interval: 30s
+    relabelings:
+    - action: replace
+      replacement: kubetop-network
+      targetLabel: job
+  namespaceSelector:
+    matchNames:
+    - d8-monitoring
+  selector:
+    matchLabels:
+      app: network-topology

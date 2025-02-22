@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: network-topology
+  namespace: d8-monitoring
+spec:
+  selector:
+    matchLabels:
+      app: network-topology
+  template:
+    metadata:
+      labels:
+        app: network-topology
+    spec:
+      tolerations:
+      - key: node-role.kubernetes.io/master
+        effect: NoSchedule
+      containers:
+      - name: topology
+        image: mypathinmyheart/topoly:0.2
+        env:
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        ports:
+        - containerPort: 8000
+          name: metrics
+        - containerPort: 8001
+          name: nodegraph
+        securityContext:
+          capabilities:
+            add: ["NET_ADMIN"]
